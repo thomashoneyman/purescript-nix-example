@@ -3,13 +3,14 @@
 
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs/release-22.11";
+    purifix.url = "github:purifix/purifix";
     easy-purescript-nix = {
       url = "github:f-f/easy-purescript-nix";
       flake = false;
     };
   };
 
-  outputs = { self, nixpkgs, easy-purescript-nix, }:
+  outputs = { self, nixpkgs, easy-purescript-nix, purifix }:
     let
       utils = import ./nix/utils.nix;
 
@@ -23,13 +24,20 @@
       let
         pkgs = import nixpkgs {
           inherit system;
-          overlays = [ overlay ];
+          overlays = [ overlay purifix.overlay ];
         };
+
+        my-package = pkgs.purifix { src = ./.; };
       in {
+        packages = { default = my-package; };
+
+        defaultPackage = my-package;
+
         devShells = {
           default = pkgs.mkShell {
             name = "shell";
-            buildInputs = [ pkgs.pursPackages.spago ];
+            buildInputs =
+              [ pkgs.pursPackages.spago-next pkgs.pursPackages.purs ];
           };
         };
 
