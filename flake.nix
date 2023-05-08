@@ -16,8 +16,9 @@
 
       supportedSystems = [ "x86_64-linux" "x86_64-darwin" ];
 
-      overlay = final: prev: {
+      overlay = final: prev: rec {
         pursPackages = prev.callPackage easy-purescript-nix { };
+        purescript = pursPackages.purs;
         nodejs = prev.nodejs-18_x-slim;
       };
     in utils.eachSystem supportedSystems (system:
@@ -36,8 +37,7 @@
         devShells = {
           default = pkgs.mkShell {
             name = "shell";
-            buildInputs =
-              [ pkgs.pursPackages.spago-next pkgs.pursPackages.purs ];
+            buildInputs = [ pkgs.pursPackages.spago-next pkgs.purescript ];
           };
         };
 
