@@ -19,11 +19,12 @@
         # Build the PureScript package and bundle to a Node script.
         package = pkgs.stdenv.mkDerivation {
           name = "my-package";
+          src = ./src;
           phases = [ "buildPhase" "installPhase" ];
           nativeBuildInputs = [ pkgs.purescript pkgs.esbuild ];
           buildPhase = ''
             set -f
-            purs compile ${dependencies.globs} ${./src}/**/*.purs
+            purs compile $src/**/*.purs ${dependencies.globs}
             set +f
             esbuild ./output/Main/index.js --bundle --outfile=app.js --platform=node --minify
           '';
@@ -34,7 +35,7 @@
         };
 
         # A wrapper script to run the application with Node
-        application = pkgs.writeShellScriptBin "app" ''
+        run-package = pkgs.writeShellScriptBin "run-package" ''
           ${pkgs.nodejs}/bin/node -e 'require("${package}/app.js").main()'
         '';
 
@@ -45,7 +46,7 @@
         # The runnable app (for deployments) calls out to Node.
         apps.default = {
           type = "app";
-          program = "${application}/bin/app";
+          program = "${run-package}/bin/run-package";
         };
       });
 }
