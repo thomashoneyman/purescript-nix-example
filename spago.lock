@@ -1,0 +1,18 @@
+{
+  "lockfileVersion": "1.0.0",
+  "compiler": "0.15.8",
+  "packages": {
+    "console": {
+      "version": "6.0.0",
+      "integrity": "sha256-gJpJ53fCDAL8BiCiJXH0HNAJ9K3gJtLo8GDaCK6hA5U="
+    },
+    "effect": {
+      "version": "4.0.0",
+      "integrity": "sha256-eBtZu+HZcMa5HilvI6kaDyVX3ji8p0W9MGKy2K4T6+M="
+    },
+    "prelude": {
+      "version": "6.0.1",
+      "integrity": "sha256-o8p6SLYmVPqzXZhQFd2hGAWEwBoXl1swxLG/scpJ0V0="
+    }
+  }
+}

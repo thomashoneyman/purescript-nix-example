@@ -10,6 +10,7 @@
             value
           else if isDerivation value then
             (merged.${name} or { }) // { ${system} = value; }
+
           else
             stepSystem system (merged.${name} or { }) value);
 
