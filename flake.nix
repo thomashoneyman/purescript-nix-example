@@ -1,5 +1,6 @@
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+
   outputs = { self, nixpkgs }:
     let
       utils = import ./nix/utils.nix;
@@ -9,11 +10,11 @@
       let
         pkgs = import nixpkgs { inherit system; };
 
-        # Use the spago.lock file to fetch all the project dependencies
-        # from the PureScript registry.
-        dependencies = (pkgs.callPackage ./nix/fetch-packages.nix { }) {
-          lockfile = ./spago.lock;
-        };
+        # This function will fetch packages from the registry, given a lockfile.
+        fetchDependencies = pkgs.callPackage ./nix/fetch-packages.nix { };
+
+        # Use the spago.lock file to fetch all the project dependencies.
+        dependencies = fetchDependencies { lockfile = ./spago.lock; };
 
         # Build the PureScript package and bundle to a Node script.
         package = pkgs.stdenv.mkDerivation {
@@ -32,20 +33,19 @@
           '';
         };
 
-      in {
-        # The basic package is the derivation for our bundle
-        defaultPackage = package;
+        # A wrapper script to run the application with Node
+        application = pkgs.writeShellScriptBin "app" ''
+          ${pkgs.nodejs}/bin/node -e 'require("${package}/app.js").main()'
+        '';
 
-        # But we can turn it into an app (which we can then use in NixOS deploys)
-        # by calling Node:
-        defaultApp = {
+      in {
+        # The basic package is the derivation for our bundle.
+        packages.default = package;
+
+        # The runnable app (for deployments) calls out to Node.
+        apps.default = {
           type = "app";
-          program = "${
-              pkgs.writeShellScriptBin "app" ''
-                ${pkgs.nodejs}/bin/node -e 'require("${package}/app.js").main()'
-              ''
-            }/bin/app";
+          program = "${application}/bin/app";
         };
       });
 }
-
