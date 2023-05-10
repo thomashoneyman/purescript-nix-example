@@ -37,6 +37,7 @@ let
     fetchgit {
       inherit (attr) url rev;
       hash = attr.integrity;
+      sparseCheckout = if attr.subdir == "" then [ ] else [ attr.subdir ];
     };
 
   # Option 3: Fetch the given package from the local workspace
