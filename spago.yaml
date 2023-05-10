@@ -1,12 +1,3 @@
-package:
-  name: nix-example
-  dependencies:
-    - console: ">=1.0.0 <10.0.0"
-    - effect
-    - prelude
-  test:
-    dependencies: []
-    main: Test.Main
 workspace:
   extra_packages: {}
   package_set:

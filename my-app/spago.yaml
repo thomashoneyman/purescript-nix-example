@@ -1,0 +1,7 @@
+package:
+  name: my-app
+  dependencies:
+    - console: ">=1.0.0 <10.0.0"
+    - effect
+    - prelude
+    - my-library

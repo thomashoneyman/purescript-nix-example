@@ -11,22 +11,19 @@
         pkgs = import nixpkgs { inherit system; };
 
         # This function will fetch packages from the registry, given a lockfile.
-        fetchDependencies = pkgs.callPackage ./nix/fetch-packages.nix { };
-
-        # Use the spago.lock file to fetch all the project dependencies.
-        dependencies = fetchDependencies { lockfile = ./spago.lock; };
+        dependencies = pkgs.callPackage ./nix/fetch-packages.nix { };
 
         # Build the PureScript package and bundle to a Node script.
         package = pkgs.stdenv.mkDerivation {
-          name = "my-package";
-          src = ./src;
+          name = "my-app";
+          src = ./my-app;
           phases = [ "buildPhase" "installPhase" ];
           nativeBuildInputs = [ pkgs.purescript pkgs.esbuild ];
           buildPhase = ''
             set -f
             purs compile $src/**/*.purs ${dependencies.globs}
             set +f
-            esbuild ./output/Main/index.js --bundle --outfile=app.js --platform=node --minify
+            esbuild ./output/App.Main/index.js --bundle --outfile=app.js --platform=node --minify
           '';
           installPhase = ''
             mkdir $out

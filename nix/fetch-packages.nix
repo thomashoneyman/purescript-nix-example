@@ -1,13 +1,21 @@
-{ stdenv, callPackage, lib, fetchurl }:
-
-{ lockfile }:
+{ stdenv, callPackage, lib, fetchurl, fetchgit }:
 
 let
   # Read the JSON lock file
-  lock = builtins.fromJSON (builtins.readFile lockfile);
+  lock = builtins.fromJSON (builtins.readFile ../spago.lock);
 
-  # Fetch and unpack the given package from the registry
-  fetchPackageTarball = name: attr:
+  fetchPackage = name: attr:
+    if attr.type == "registry" then
+      fetchRegistryPackage name attr
+    else if attr.type == "git" then
+      fetchGitPackage name attr
+    else if attr.type == "workspace" then
+      fetchWorkspacePackage name attr
+    else
+      throw "Unknown package type ${attr.type}";
+
+  # Option 1: Fetch and unpack the given package from the registry
+  fetchRegistryPackage = name: attr:
     stdenv.mkDerivation {
       pname = name;
       version = attr.version;
@@ -24,8 +32,25 @@ let
       '';
     };
 
+  # Option 2: Fetch the given package from a Git url
+  fetchGitPackage = name: attr:
+    fetchgit {
+      inherit (attr) url rev;
+      hash = attr.integrity;
+    };
+
+  # Option 3: Fetch the given package from the local workspace
+  fetchWorkspacePackage = name: attr:
+    stdenv.mkDerivation {
+      name = name;
+      src = "${../.}/${attr.path}";
+      installPhase = ''
+        cp -R . "$out"
+      '';
+    };
+
   # Fetch all the packages
-  fetchedPackages = lib.mapAttrs fetchPackageTarball lock.packages;
+  fetchedPackages = lib.mapAttrs fetchPackage lock.packages;
 
   # Convert the set of derivations into a space-separated string of Nix store paths
   storePaths = builtins.attrValues fetchedPackages;

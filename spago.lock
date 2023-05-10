@@ -1,16 +1,24 @@
 {
-  "lockfileVersion": "1.0.0",
-  "compiler": "0.15.8",
+  "lockfile": "1.0.0",
   "packages": {
     "console": {
-      "version": "6.0.0",
-      "integrity": "sha256-gJpJ53fCDAL8BiCiJXH0HNAJ9K3gJtLo8GDaCK6hA5U="
+      "type": "git",
+      "url": "https://github.com/purescript/purescript-console.git",
+      "rev": "3b83d7b792d03872afeea5e62b4f686ab0f09842",
+      "subdir": "",
+      "integrity": "sha256-2rWPmahNLIqnQ8zJGYeHwqFnHiPgLl9BSJdp6GugJTs="
     },
     "effect": {
+      "type": "registry",
       "version": "4.0.0",
       "integrity": "sha256-eBtZu+HZcMa5HilvI6kaDyVX3ji8p0W9MGKy2K4T6+M="
     },
+    "my-library": {
+      "type": "workspace",
+      "path": "my-library"
+    },
     "prelude": {
+      "type": "registry",
       "version": "6.0.1",
       "integrity": "sha256-o8p6SLYmVPqzXZhQFd2hGAWEwBoXl1swxLG/scpJ0V0="
     }
