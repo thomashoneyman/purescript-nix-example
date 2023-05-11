@@ -1,30 +1,32 @@
-{ stdenv, callPackage, lib, fetchurl, fetchgit }:
-
-let
+{
+  stdenv,
+  callPackage,
+  lib,
+  fetchurl,
+  fetchgit,
+}: let
   # Read the JSON lock file
   lock = builtins.fromJSON (builtins.readFile ../spago.lock);
 
   fetchPackage = name: attr:
-    if attr.type == "registry" then
-      fetchRegistryPackage name attr
-    else if attr.type == "git" then
-      fetchGitPackage name attr
-    else if attr.type == "workspace" then
-      fetchWorkspacePackage name attr
-    else
-      throw "Unknown package type ${attr.type}";
+    if attr.type == "registry"
+    then fetchRegistryPackage name attr
+    else if attr.type == "git"
+    then fetchGitPackage name attr
+    else if attr.type == "workspace"
+    then fetchWorkspacePackage name attr
+    else throw "Unknown package type ${attr.type}";
 
   # Option 1: Fetch and unpack the given package from the registry
   fetchRegistryPackage = name: attr:
     stdenv.mkDerivation {
-      pname = name;
+      name = name;
       version = attr.version;
 
       src = fetchurl {
         name = "${name}-${attr.version}.tar.gz";
         hash = attr.integrity;
-        url =
-          "https://packages.registry.purescript.org/${name}/${attr.version}.tar.gz";
+        url = "https://packages.registry.purescript.org/${name}/${attr.version}.tar.gz";
       };
 
       installPhase = ''
@@ -33,11 +35,18 @@ let
     };
 
   # Option 2: Fetch the given package from a Git url
-  fetchGitPackage = name: attr:
-    fetchgit {
-      inherit (attr) url rev;
-      hash = attr.integrity;
-      sparseCheckout = if attr.subdir == "" then [ ] else [ attr.subdir ];
+  fetchGitPackage = name: attr: let
+    fetched = builtins.fetchGit {inherit (attr) url rev;};
+  in
+    stdenv.mkDerivation {
+      name = name;
+      src =
+        if builtins.hasAttr "subdir" attr
+        then "${fetched}/${attr.subdir}"
+        else fetched;
+      installPhase = ''
+        cp -R . "$out"
+      '';
     };
 
   # Option 3: Fetch the given package from the local workspace
@@ -57,9 +66,9 @@ let
   storePaths = builtins.attrValues fetchedPackages;
 
   # Turn them into glob patterns acceptable for the compiler
-  storeGlobs = builtins.concatStringsSep " "
+  storeGlobs =
+    builtins.concatStringsSep " "
     (builtins.map (path: "'${path}/src/**/*.purs'") storePaths);
-
 in {
   packages = fetchedPackages;
   paths = storePaths;

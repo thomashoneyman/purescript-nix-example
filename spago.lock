@@ -4,9 +4,7 @@
     "console": {
       "type": "git",
       "url": "https://github.com/purescript/purescript-console.git",
-      "rev": "3b83d7b792d03872afeea5e62b4f686ab0f09842",
-      "subdir": "",
-      "integrity": "sha256-2rWPmahNLIqnQ8zJGYeHwqFnHiPgLl9BSJdp6GugJTs="
+      "rev": "3b83d7b792d03872afeea5e62b4f686ab0f09842"
     },
     "effect": {
       "type": "registry",
