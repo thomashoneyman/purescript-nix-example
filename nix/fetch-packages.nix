@@ -36,7 +36,9 @@
 
   # Option 2: Fetch the given package from a Git url
   fetchGitPackage = name: attr: let
-    fetched = builtins.fetchGit {inherit (attr) url rev;};
+    fetched = builtins.fetchGit {
+      inherit (attr) url rev ref;
+    };
   in
     stdenv.mkDerivation {
       name = name;
