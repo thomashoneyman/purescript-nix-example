@@ -4,7 +4,6 @@
     "console": {
       "type": "git",
       "url": "https://github.com/purescript/purescript-console.git",
-      "ref": "v6.0.0",
       "rev": "3b83d7b792d03872afeea5e62b4f686ab0f09842"
     },
     "effect": {

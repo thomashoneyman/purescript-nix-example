@@ -37,7 +37,10 @@
   # Option 2: Fetch the given package from a Git url
   fetchGitPackage = name: attr: let
     fetched = builtins.fetchGit {
-      inherit (attr) url rev ref;
+      inherit (attr) url rev;
+      # Look at commit hashes across the repository, not just the default branch,
+      # in case they are pointing to a non-default-branch commit.
+      allRefs = true;
     };
   in
     stdenv.mkDerivation {
