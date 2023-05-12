@@ -1,4 +1,3 @@
 workspace:
-  extra_packages: {}
   package_set:
     registry: 21.0.0
