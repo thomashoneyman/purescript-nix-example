@@ -170,4 +170,4 @@
   in
     processLines filtered (-1);
 in
-  parseYAML
+  fromYAML

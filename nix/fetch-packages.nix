@@ -4,12 +4,12 @@
   lib,
   fetchurl,
   fetchgit,
-}: let
+}: lockfile: let
   # Import YAML parser
   fromYAML = callPackage ./from-yaml.nix {};
 
   # Read the YAML lock file
-  lock = fromYAML (builtins.readFile ../spago.lock);
+  lock = fromYAML (builtins.readFile lockfile);
 
   fetchPackage = name: attr:
     if attr.type == "registry"

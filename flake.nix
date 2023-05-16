@@ -12,7 +12,10 @@
       pkgs = import nixpkgs {inherit system;};
 
       # This function will fetch packages from the registry, given a lockfile.
-      dependencies = pkgs.callPackage ./nix/fetch-packages.nix {};
+      fetchPackages = pkgs.callPackage ./nix/fetch-packages.nix {};
+
+      # When used, we get the fetched packages available.
+      dependencies = fetchPackages ./spago.lock;
 
       # Build the PureScript package and bundle to a Node script.
       package = pkgs.stdenv.mkDerivation {
