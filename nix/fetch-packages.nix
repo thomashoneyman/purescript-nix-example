@@ -1,19 +1,26 @@
-{ stdenv, callPackage, lib, fetchurl, fetchgit, }:
-let
-  # Read the JSON lock file
-  lock = builtins.fromJSON (builtins.readFile ../spago.lock);
+{
+  stdenv,
+  callPackage,
+  lib,
+  fetchurl,
+  fetchgit,
+}: let
+  # Import YAML parser
+  fromYAML = callPackage ./from-yaml.nix {};
+
+  # Read the YAML lock file
+  lock = fromYAML (builtins.readFile ../spago.lock);
 
   fetchPackage = name: attr:
-    if attr.type == "registry" then
-      fetchRegistryPackage name attr
-    else if attr.type == "git" then
-      fetchGitPackage name attr
-    else if attr.type == "github" then
-      fetchGitHubPackage name attr
-    else if attr.type == "workspace" then
-      fetchWorkspacePackage name attr
-    else
-      throw "Unknown package type ${attr.type}";
+    if attr.type == "registry"
+    then fetchRegistryPackage name attr
+    else if attr.type == "git"
+    then fetchGitPackage name attr
+    else if attr.type == "github"
+    then fetchGitHubPackage name attr
+    else if attr.type == "local"
+    then fetchWorkspacePackage name attr
+    else throw "Unknown package type ${attr.type}";
 
   # Option 1: Fetch and unpack the given package from the registry
   # "effect": {
@@ -29,8 +36,7 @@ let
       src = fetchurl {
         name = "${name}-${attr.version}.tar.gz";
         hash = attr.integrity;
-        url =
-          "https://packages.registry.purescript.org/${name}/${attr.version}.tar.gz";
+        url = "https://packages.registry.purescript.org/${name}/${attr.version}.tar.gz";
       };
 
       installPhase = ''
@@ -44,20 +50,20 @@ let
   #   "url": "https://github.com/purescript/purescript-console.git",
   #   "rev": "3b83d7b792d03872afeea5e62b4f686ab0f09842"
   # },
-  fetchGitPackage = name: attr:
-    let
-      fetched = builtins.fetchGit {
-        inherit (attr) url rev;
-        # Look at commit hashes across the repository, not just the default branch,
-        # in case they are pointing to a non-default-branch commit.
-        allRefs = true;
-      };
-    in stdenv.mkDerivation {
+  fetchGitPackage = name: attr: let
+    fetched = builtins.fetchGit {
+      inherit (attr) url rev;
+      # Look at commit hashes across the repository, not just the default branch,
+      # in case they are pointing to a non-default-branch commit.
+      allRefs = true;
+    };
+  in
+    stdenv.mkDerivation {
       name = name;
-      src = if builtins.hasAttr "subdir" attr then
-        "${fetched}/${attr.subdir}"
-      else
-        fetched;
+      src =
+        if builtins.hasAttr "subdir" attr
+        then "${fetched}/${attr.subdir}"
+        else fetched;
       installPhase = ''
         cp -R . "$out"
       '';
@@ -71,21 +77,20 @@ let
   #   "tag": "v9.0.0",
   #   "integrity": "sha256-sv7H9ihP0Y5UnwlHuLVXEU736nUXZC5C5a0kKReFLBA="
   # },
-  fetchGitHubPackage = name: attr:
-    let
-      fetched = fetchurl {
-        name = "${attr.owner}-${attr.repo}-${attr.tag}.tar.gz";
-        hash = attr.integrity;
-        url =
-          "https://github.com/${attr.owner}/${attr.repo}/archive/refs/tags/${attr.tag}.tar.gz";
-      };
-    in stdenv.mkDerivation {
+  fetchGitHubPackage = name: attr: let
+    fetched = fetchurl {
+      name = "${attr.owner}-${attr.repo}-${attr.tag}.tar.gz";
+      hash = attr.integrity;
+      url = "https://github.com/${attr.owner}/${attr.repo}/archive/refs/tags/${attr.tag}.tar.gz";
+    };
+  in
+    stdenv.mkDerivation {
       name = name;
       version = attr.tag;
-      src = if builtins.hasAttr "subdir" attr then
-        "${fetched}/${attr.subdir}"
-      else
-        fetched;
+      src =
+        if builtins.hasAttr "subdir" attr
+        then "${fetched}/${attr.subdir}"
+        else fetched;
       installPhase = ''
         cp -R . "$out"
       '';
@@ -112,7 +117,8 @@ let
   storePaths = builtins.attrValues fetchedPackages;
 
   # Turn them into glob patterns acceptable for the compiler
-  storeGlobs = builtins.concatStringsSep " "
+  storeGlobs =
+    builtins.concatStringsSep " "
     (builtins.map (path: "'${path}/src/**/*.purs'") storePaths);
 in {
   packages = fetchedPackages;
