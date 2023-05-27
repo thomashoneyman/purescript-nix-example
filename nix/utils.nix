@@ -22,4 +22,9 @@
       builtins.foldl' foldFn attrs (builtins.attrNames ret);
   in
     builtins.foldl' foldFn {} systems;
+
+  pathExists = path:
+    if builtins.pathExists path
+    then path
+    else throw "Path does not exist: ${path}";
 }

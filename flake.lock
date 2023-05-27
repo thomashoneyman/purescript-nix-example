@@ -1,12 +1,28 @@
 {
   "nodes": {
+    "easy-purescript-nix": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1685141330,
+        "narHash": "sha256-70jWIYFF/dlxY91Y4awYtAGnNCWbGSWzZwzsd4eorLo=",
+        "owner": "f-f",
+        "repo": "easy-purescript-nix",
+        "rev": "e88b15c2875236af318cfda913ce5a6fa142021b",
+        "type": "github"
+      },
+      "original": {
+        "owner": "f-f",
+        "repo": "easy-purescript-nix",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
-        "lastModified": 1683546353,
-        "narHash": "sha256-zEfx6q4fXK5wq+RCsyM0FyWBKNNhHTKMpCWkEpKDe2g=",
+        "lastModified": 1685043448,
+        "narHash": "sha256-U3BwyDc2OzBcZ8tD09qXibyivgOtOQFTFCVgFyJ+6MM=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "7629f9b0680d87c7775f3261bee746da5dac76d1",
+        "rev": "9886352ec9ab3945896ee8a4185e961fe29df209",
         "type": "github"
       },
       "original": {
@@ -18,6 +34,7 @@
     },
     "root": {
       "inputs": {
+        "easy-purescript-nix": "easy-purescript-nix",
         "nixpkgs": "nixpkgs"
       }
     }

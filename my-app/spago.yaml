@@ -1,7 +1,10 @@
 package:
   name: my-app
+  run:
+    main: App.Main
   dependencies:
     - console: ">=1.0.0 <10.0.0"
     - effect
     - prelude
     - my-library
+    - registry-lib
