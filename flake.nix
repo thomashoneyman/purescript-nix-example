@@ -1,32 +1,26 @@
 {
-  inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
-
-  inputs.easy-purescript-nix = {
-    url = "github:f-f/easy-purescript-nix";
-    flake = false;
+  inputs = {
+    utils.url = "github:numtide/flake-utils";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
+    easy-purescript-nix = {
+      url = "github:f-f/easy-purescript-nix";
+      flake = false;
+    };
+    spago-nix = {
+      url = "github:thomashoneyman/spago-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    easy-purescript-nix,
-  }: let
-    utils = import ./nix/utils.nix;
-    supportedSystems = ["x86_64-linux" "x86_64-darwin"];
-  in
-    utils.eachSystem supportedSystems (system: let
-      pkgs = import nixpkgs {inherit system;};
+  outputs = inputs: let
+    utils.supportedSystems = ["x86_64-linux" "x86_64-darwin"];
+    utils.eachSupportedSystem = inputs.utils.lib.eachSystem utils.supportedSystems;
 
-      pursPkgs = pkgs.callPackage easy-purescript-nix {};
-
-      # This function will fetch packages from the registry, given a lockfile.
-      spagoLock = pkgs.callPackage ./nix/spago-lock.nix {};
-
-      # When used, we get the available workspaces
-      workspaces = spagoLock {src = ./.;};
-
+    mkPackages = pkgs: spago-nix: let
+      workspaces = spago-nix {src = ./.;};
+    in {
       # Build the PureScript package and bundle to a Node script.
-      package = pkgs.stdenv.mkDerivation {
+      default = pkgs.stdenv.mkDerivation {
         name = "my-app";
         src = ./my-app;
         phases = ["buildPhase" "installPhase"];
@@ -42,24 +36,35 @@
           cp app.js $out
         '';
       };
+    };
 
-      # A wrapper script to run the application with Node
-      run-package = pkgs.writeShellScriptBin "run-package" ''
-        ${pkgs.nodejs}/bin/node -e 'require("${package}/app.js").main()'
-      '';
-    in {
-      # Development shell
-      devShells.default = pkgs.mkShell {
-        buildInputs = [pkgs.purescript pursPkgs.spago-next pkgs.esbuild];
-      };
-
-      # The basic package is the derivation for our bundle.
-      packages.default = package;
-
-      # The runnable app (for deployments) calls out to Node.
-      apps.default = {
+    mkApps = pkgs: packages: {
+      default = {
         type = "app";
-        program = "${run-package}/bin/run-package";
+        program = "${
+          pkgs.writeShellScriptBin "run-package" ''
+            ${pkgs.nodejs}/bin/node -e 'require("${packages.default}/app.js").main()'
+          ''
+        }/bin/run-package";
       };
-    });
+    };
+
+    mkDevShells = pkgs: pursPkgs: {
+      default = pkgs.mkShell {
+        buildInputs = [pursPkgs.purs pursPkgs.spago-next pkgs.esbuild];
+      };
+    };
+
+    mkOutput = system: let
+      pkgs = import inputs.nixpkgs {inherit system;};
+      pursPkgs = pkgs.callPackage inputs.easy-purescript-nix {};
+    in rec {
+      packages = mkPackages pkgs inputs.spago-nix.${system};
+      apps = mkApps pkgs packages;
+      devShells = mkDevShells pkgs pursPkgs;
+    };
+
+    systemOutputs = utils.eachSupportedSystem mkOutput;
+  in
+    systemOutputs;
 }
