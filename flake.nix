@@ -12,7 +12,8 @@
     utils.eachSupportedSystem = inputs.utils.lib.eachSystem utils.supportedSystems;
 
     mkPackages = pkgs: let
-      workspaces = pkgs.spago-nix {src = ./.;};
+      npmDependencies = pkgs.spago-npm-dependencies {src = ./.;};
+      workspaces = pkgs.spago-lock {src = ./.;};
     in {
       # Build the PureScript package and bundle to a Node script.
       default = pkgs.stdenv.mkDerivation {
@@ -21,6 +22,7 @@
         phases = ["buildPhase" "installPhase"];
         nativeBuildInputs = [pkgs.purescript pkgs.esbuild];
         buildPhase = ''
+          ln -s ${npmDependencies}/js/node_modules .
           set -f
           purs compile $src/**/*.purs ${workspaces.my-app.dependencies.globs}
           set +f

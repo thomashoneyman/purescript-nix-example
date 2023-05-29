@@ -3,8 +3,9 @@ package:
   run:
     main: App.Main
   dependencies:
-    - console: ">=1.0.0 <10.0.0"
     - effect
-    - prelude
+    - either
     - my-library
+    - prelude
     - registry-lib
+    - console: ">=1.0.0 <10.0.0"

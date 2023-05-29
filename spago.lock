@@ -5,6 +5,7 @@ workspace:
       dependencies:
         - console: ">=1.0.0 <10.0.0"
         - effect
+        - either
         - my-library
         - prelude
         - registry-lib

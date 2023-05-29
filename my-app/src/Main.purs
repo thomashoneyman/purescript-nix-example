@@ -2,10 +2,11 @@ module App.Main where
 
 import Prelude
 
+import Data.Either as Either
 import Effect (Effect)
 import Effect.Console (log)
 import Lib as Lib
-import Registry.Constants as Registry.Constants
+import Registry.License as License
 
 main :: Effect Unit
-main = log $ Lib.pizza <> " " <> Registry.Constants.apiUrl
+main = log $ Lib.pizza <> " " <> Either.either identity License.print (License.parse "MIT")
