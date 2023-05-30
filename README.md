@@ -7,4 +7,4 @@ We fully leverage Nix such that there is a simple Nix command for building, test
 - `nix build` -> bundle the project
 - `nix run` -> execute `Main`
 
-In the future this small example may demonstrate a monorepo setup, deployment via a Nix ops tool to a local VM or a cloud provider, integration with JavaScript dependencies, and integration tests.
+In the future this small example may demonstrate a monorepo setup, deployment via a Nix ops tool to a local VM or a cloud provider, and integration tests.

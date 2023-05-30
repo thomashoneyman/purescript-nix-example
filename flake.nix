@@ -1,9 +1,9 @@
 {
   inputs = {
     utils.url = "github:numtide/flake-utils";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-22.11";
-    easy-purescript-nix.url = "github:f-f/easy-purescript-nix";
-    easy-purescript-nix.flake = false;
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
+    purescript-nix.url = "github:thomashoneyman/purescript-nix";
+    purescript-nix.inputs.nixpkgs.follows = "nixpkgs";
     spago-nix.url = "github:thomashoneyman/spago-nix";
   };
 
@@ -48,7 +48,7 @@
 
     mkDevShells = pkgs: pursPkgs: {
       default = pkgs.mkShell {
-        buildInputs = [pursPkgs.purs pursPkgs.spago-next pkgs.esbuild];
+        buildInputs = [pursPkgs.purs pursPkgs.spago pkgs.esbuild];
       };
     };
 
@@ -57,7 +57,7 @@
         inherit system;
         overlays = [inputs.spago-nix.overlay];
       };
-      pursPkgs = pkgs.callPackage inputs.easy-purescript-nix {};
+      pursPkgs = pkgs.callPackage inputs.purescript-nix {};
     in rec {
       packages = mkPackages pkgs;
       apps = mkApps pkgs packages;
