@@ -2,11 +2,11 @@
   "nodes": {
     "nixpkgs": {
       "locked": {
-        "lastModified": 1685272473,
-        "narHash": "sha256-oHNi6BgcGquKDkVN1/awsh+KLBey+Nj3ejTVH585upU=",
+        "lastModified": 1685716800,
+        "narHash": "sha256-b6RpYRRsv6Wwl9XG2sjLvqKdkPMvqQqgtiGJHAIyGSw=",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "a7adeadc7d4033048592fac7c87ca888d2a99d31",
+        "rev": "f3d743463920751eb092930d06e700981398332a",
         "type": "github"
       },
       "original": {
@@ -16,19 +16,32 @@
         "type": "github"
       }
     },
+    "nixpkgs_2": {
+      "locked": {
+        "lastModified": 1685716800,
+        "narHash": "sha256-b6RpYRRsv6Wwl9XG2sjLvqKdkPMvqQqgtiGJHAIyGSw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "f3d743463920751eb092930d06e700981398332a",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixos-23.05",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "purescript-nix": {
       "inputs": {
-        "nixpkgs": [
-          "nixpkgs"
-        ],
-        "spago-nix": "spago-nix"
+        "nixpkgs": "nixpkgs_2"
       },
       "locked": {
-        "lastModified": 1685404600,
-        "narHash": "sha256-aWQPeTc4kZS2EfVYKyhhxGu0vl4vH9SKirs9JKmoKLE=",
+        "lastModified": 1685813339,
+        "narHash": "sha256-fh3l64T/C3FQH0QrI/t8Gx1MZ6yIAHfPbYRDqFMQc6g=",
         "owner": "thomashoneyman",
         "repo": "purescript-nix",
-        "rev": "ef690bc4da6468500eabefca398cd6e9d1750d7c",
+        "rev": "2500a218ba377b3be3c5fc997f204b367f404a80",
         "type": "github"
       },
       "original": {
@@ -41,38 +54,7 @@
       "inputs": {
         "nixpkgs": "nixpkgs",
         "purescript-nix": "purescript-nix",
-        "spago-nix": "spago-nix_2",
         "utils": "utils"
-      }
-    },
-    "spago-nix": {
-      "locked": {
-        "lastModified": 1685401988,
-        "narHash": "sha256-ErtsGoCUyqLsfFhSOUFX/8ZU20nayPmUZ8wDm0j9tEg=",
-        "owner": "thomashoneyman",
-        "repo": "spago-nix",
-        "rev": "13d7a29c3fd144f2a8e64b53785c70f99ed73413",
-        "type": "github"
-      },
-      "original": {
-        "owner": "thomashoneyman",
-        "repo": "spago-nix",
-        "type": "github"
-      }
-    },
-    "spago-nix_2": {
-      "locked": {
-        "lastModified": 1685390650,
-        "narHash": "sha256-E5VQ4WX6jat9b384OJGIecgs9vgCtBCKG8Q9/UhB2m4=",
-        "owner": "thomashoneyman",
-        "repo": "spago-nix",
-        "rev": "ce1ef5e0254ba00f4285ab0ecc4670ea5a542410",
-        "type": "github"
-      },
-      "original": {
-        "owner": "thomashoneyman",
-        "repo": "spago-nix",
-        "type": "github"
       }
     },
     "systems": {
@@ -95,11 +77,11 @@
         "systems": "systems"
       },
       "locked": {
-        "lastModified": 1681202837,
-        "narHash": "sha256-H+Rh19JDwRtpVPAWp64F+rlEtxUWBAQW28eAi3SRSzg=",
+        "lastModified": 1685518550,
+        "narHash": "sha256-o2d0KcvaXzTrPRIo0kOLV0/QXHhDQ5DTi+OxcjO8xqY=",
         "owner": "numtide",
         "repo": "flake-utils",
-        "rev": "cfacdce06f30d2b68473a46042957675eebb3401",
+        "rev": "a1720a10a6cfe8234c0e93907ffe81be440f4cef",
         "type": "github"
       },
       "original": {
