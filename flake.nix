@@ -10,8 +10,8 @@
     utils.eachSupportedSystem = inputs.utils.lib.eachSystem utils.supportedSystems;
 
     mkPackages = pkgs: let
-      npmDependencies = pkgs.spago-npm-dependencies {src = ./.;};
-      workspaces = pkgs.spago-lock {src = ./.;};
+      npmDependencies = pkgs.buildPackageLock {src = ./.;};
+      workspaces = pkgs.buildSpagoLock {src = ./.;};
     in {
       # Build the PureScript package and bundle to a Node script.
       default = pkgs.stdenv.mkDerivation {
