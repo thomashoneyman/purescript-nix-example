@@ -3,6 +3,7 @@
     utils.url = "github:numtide/flake-utils";
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-23.05";
     purescript-nix.url = "github:thomashoneyman/purescript-nix";
+    purescript-nix.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs = inputs: let
@@ -18,7 +19,7 @@
         name = "my-app";
         src = ./my-app;
         phases = ["buildPhase" "installPhase"];
-        nativeBuildInputs = [pkgs.purescript pkgs.esbuild];
+        nativeBuildInputs = [pkgs.purs.purs-unstable pkgs.esbuild];
         buildPhase = ''
           ln -s ${npmDependencies}/js/node_modules .
           set -f
@@ -46,7 +47,7 @@
 
     mkDevShells = pkgs: {
       default = pkgs.mkShell {
-        buildInputs = [pkgs.purs.purs pkgs.spago.spago pkgs.esbuild];
+        buildInputs = [pkgs.purs.purs-unstable pkgs.spago.spago pkgs.esbuild];
       };
     };
 

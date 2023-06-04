@@ -16,32 +16,18 @@
         "type": "github"
       }
     },
-    "nixpkgs_2": {
-      "locked": {
-        "lastModified": 1685716800,
-        "narHash": "sha256-b6RpYRRsv6Wwl9XG2sjLvqKdkPMvqQqgtiGJHAIyGSw=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "f3d743463920751eb092930d06e700981398332a",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-23.05",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "purescript-nix": {
       "inputs": {
-        "nixpkgs": "nixpkgs_2"
+        "nixpkgs": [
+          "nixpkgs"
+        ]
       },
       "locked": {
-        "lastModified": 1685889076,
-        "narHash": "sha256-pYzMeZxo44Vs6pcGqldhT3jqTCfDpxYcR8vSLXopB88=",
+        "lastModified": 1685890984,
+        "narHash": "sha256-ypwyNPFpzACa28kpQgew1VJVG+jBQhgPlk0NDhKXb8Q=",
         "owner": "thomashoneyman",
         "repo": "purescript-nix",
-        "rev": "4aed406b3188d8ee5ed653134590e8d098877ceb",
+        "rev": "5146780bae1ba4fc9812703bedce302b6afeef07",
         "type": "github"
       },
       "original": {
