@@ -12,18 +12,20 @@
 
     mkPackages = pkgs: let
       npmDependencies = pkgs.purix.buildPackageLock {src = ./.;};
-      spagoDependencies = pkgs.purix.buildSpagoLock {src = ./.;};
+      spagoDependencies = pkgs.purix.buildSpagoLock {src = ./.; corefn = true;};
     in {
       # Build the PureScript package and bundle to a Node script.
       default = pkgs.stdenv.mkDerivation {
         name = "my-app";
         src = ./my-app;
         phases = ["buildPhase" "installPhase"];
-        nativeBuildInputs = [pkgs.esbuild];
+        nativeBuildInputs = [pkgs.purs-backend-es pkgs.esbuild];
         buildPhase = ''
           ln -s ${npmDependencies}/js/node_modules .
           cp -r ${spagoDependencies.my-app}/output .
-          esbuild ./output/App.Main/index.js --bundle --outfile=app.js --platform=node --minify
+          echo "Optimizing (target: output-es)..."
+          purs-backend-es build
+          esbuild ./output-es/App.Main/index.js --bundle --outfile=app.js --platform=node --minify
         '';
         installPhase = ''
           mkdir $out
